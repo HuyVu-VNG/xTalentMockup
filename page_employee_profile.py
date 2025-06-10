@@ -4,6 +4,7 @@ def page_employee_profile(employee=None):
     import plotly.express as px
     import pandas as pd
     import datetime
+    import plotly.graph_objects as go
 
     # --- Dummy employee/assignment-level data làm giàu (song song, promote, transfer) ---
     if employee is None:
@@ -83,6 +84,40 @@ def page_employee_profile(employee=None):
                 "engagement": "Medium", "risk": "Normal", "retention": "Tiềm năng giữ chân"
             }
         }
+    # Dummy data cho Career Path
+    career_path = [
+        {"role": "Nhân viên Văn phòng", "current": False},
+        {"role": "Chuyên viên Văn phòng", "current": False},
+        {"role": "Phó phòng HCNS", "current": True},    # Đang ở đây
+        {"role": "Trưởng phòng HCNS", "current": False},
+        {"role": "Giám đốc Nhân sự", "current": False}
+    ]
+
+
+    skills_required = [
+        {"name": "Quản lý nhân sự",        "required": 4, "current": 3},
+        {"name": "Lập kế hoạch nhân sự",   "required": 3, "current": 2},
+        {"name": "Phân tích dữ liệu nhân sự", "required": 3, "current": 2},
+        {"name": "Điều phối dự án HR",     "required": 3, "current": 2},
+        {"name": "Lãnh đạo nhóm",          "required": 4, "current": 3},
+        {"name": "Kỹ năng giao tiếp",      "required": 3, "current": 3},
+        {"name": "Quản lý thay đổi",       "required": 2, "current": 2}
+    ]
+
+
+    competency_categories = [
+        "Lãnh đạo",
+        "Ra quyết định",
+        "Giao tiếp & Ảnh hưởng",
+        "Đổi mới & Sáng tạo",
+        "Quản lý dự án",
+        "Làm việc nhóm"
+    ]
+    # Mức yêu cầu cho vị trí Trưởng phòng/Phó phòng
+    target_levels = [4, 4, 4, 3, 4, 4]
+    # Mức hiện tại (demo theo CV, performance, lịch sử assignment)
+    current_levels = [3, 3, 3, 2, 3, 4]
+
 
     st.subheader(f"👨‍💼 Hồ sơ Nhân viên 360 – {employee['name']} (Emp Code: {employee['emp_code']})")
 
@@ -120,7 +155,7 @@ def page_employee_profile(employee=None):
     tabs = st.tabs([
         "Tổng quan", "Hợp đồng & phụ lục", "Lịch sử công việc", "Vị trí & mô tả", "Lương & đãi ngộ", 
         "Chấm công & nghỉ phép", "Hiệu suất", "Khen thưởng/Kỷ luật", "Tài sản", "Lịch sử đề xuất", 
-        "Hồ sơ tài liệu", "Tình trạng & kế hoạch"
+        "Hồ sơ tài liệu", "Tình trạng & kế hoạch", "Lộ trình nghề nghiệp"
     ])
 
     # Tab 1: Tổng quan - Timeline công việc dùng plotly.timeline (group by phòng ban)
@@ -272,3 +307,70 @@ def page_employee_profile(employee=None):
 
     st.divider()
     st.caption("UX xTalent – Employee 360: lịch sử assignment song song, thuyên chuyển, promote – dành cho HR chuyên sâu.")
+
+    # Thêm tab mới cuối cùng:
+    with tabs[12]:
+
+        st.markdown("### Lộ trình nghề nghiệp (Career Path)")
+
+        # 1. Career Path flow
+        st.markdown("#### Lộ trình thăng tiến")
+        steps = [c["role"] for c in career_path]
+        current_idx = next((i for i, c in enumerate(career_path) if c.get("current")), 0)
+        cols = st.columns(len(steps))
+        for i, col in enumerate(cols):
+            with col:
+                st.markdown(f"""
+                    <div style="text-align:center;">
+                        <div style="border:2px solid {'#ae185d' if i==current_idx else '#d2d2d2'};border-radius:8px;padding:8px 4px; background:{'#fff0f6' if i==current_idx else '#f9f9fa'};color:{'#ae185d' if i==current_idx else '#222'}">
+                            <b>{steps[i]}</b>
+                            {'<div style="font-size:0.9em;opacity:0.7">(Current)</div>' if i==current_idx else ''}
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+            if i < len(cols)-1:
+                col.markdown('<div style="height:30px;width:4px;margin:8px auto 0 auto;border-right:2px dashed #bdbdbd"></div>', unsafe_allow_html=True)
+
+        st.divider()
+
+        # 2. Skills Required
+        st.markdown("#### Kỹ năng & mức độ yêu cầu")
+        for skill in skills_required:
+            prog = int(100 * skill["current"]/max(skill["required"], skill["current"], 1))
+            st.markdown(
+                f"""
+                <div style="margin-bottom:10px;">
+                    <b>{skill['name']}</b> 
+                    <span style="color:#ae185d;">(Yêu cầu: Level {skill['required']})</span>
+                    <div style="background:#f0f0f7;height:10px;border-radius:5px;overflow:hidden;">
+                        <div style="width:{prog}%;background:#ae185d;height:100%;"></div>
+                    </div>
+                    <span style="font-size:0.9em;opacity:0.8;">Level hiện tại: {skill['current']}</span>
+                </div>
+                """, unsafe_allow_html=True
+            )
+
+        st.divider()
+
+        # 3. Radar Chart: Competency so sánh giữa hiện tại và yêu cầu
+        st.markdown("#### Functional Competencies")
+        radar_fig = go.Figure()
+        radar_fig.add_trace(go.Scatterpolar(
+            r=target_levels + [target_levels[0]],
+            theta=competency_categories + [competency_categories[0]],
+            fill='toself', name='Target Level', line_color="#ae185d"
+        ))
+        radar_fig.add_trace(go.Scatterpolar(
+            r=current_levels + [current_levels[0]],
+            theta=competency_categories + [competency_categories[0]],
+            fill='toself', name='Current Level', line_color="#1976d2"
+        ))
+        radar_fig.update_layout(
+            polar=dict(
+                radialaxis=dict(visible=True, range=[0, max(target_levels + current_levels) + 1], tickvals=list(range(0, max(target_levels + current_levels) + 2))),
+            ),
+            showlegend=True,
+            height=350,
+            margin=dict(l=20, r=20, t=40, b=20)
+        )
+        st.plotly_chart(radar_fig, use_container_width=True)
