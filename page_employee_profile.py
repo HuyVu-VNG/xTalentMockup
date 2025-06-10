@@ -1,7 +1,8 @@
 def page_employee_profile(employee=None):
     import streamlit as st
     from streamlit_elements import elements, mui, nivo
-    from streamlit_timeline import st_timeline
+    import plotly.express as px
+    import pandas as pd
     import datetime
 
     # --- Dummy employee/assignment-level data làm giàu (song song, promote, transfer) ---
@@ -25,7 +26,6 @@ def page_employee_profile(employee=None):
                     {"number": "PL-001", "desc": "Điều chỉnh lương", "date": "2022-01-01"},
                 ]
             },
-            # Lịch sử assignment: song song, promote, transfer
             "assignment_history": [
                 {
                     "from": "2021-06-01", "to": "2022-05-31",
@@ -85,7 +85,8 @@ def page_employee_profile(employee=None):
         }
 
     st.subheader(f"👨‍💼 Hồ sơ Nhân viên 360 – {employee['name']} (Emp Code: {employee['emp_code']})")
-    # ---- Tổng quan mini-dashboard ----
+
+    # ---- Mini-dashboard, avatar...
     with elements("employee-overview"):
         with mui.Paper(sx={"p":3, "display":"flex", "alignItems":"center", "gap":3, "mb":2, "boxShadow":3, "borderRadius":2}):
             mui.Avatar(src=employee["avatar"], sx={"width":80, "height":80, "mr":3})
@@ -93,13 +94,11 @@ def page_employee_profile(employee=None):
                 mui.Typography(employee["name"], variant="h5", sx={"fontWeight":600})
                 mui.Typography(f"Emp Code: {employee['emp_code']} | {employee['job_title']} | {employee['department']}", variant="body2")
                 mui.Typography(f"Pháp nhân: {employee['legal_entity']} | Vào làm: {employee['joined_date']}", variant="body2")
-                # Màu hóa trạng thái
                 status_map = {
                     "Active": "#388e3c", "Probation": "#1976d2", "Suspended": "#ffa000", "Terminated": "#d32f2f"
                 }
                 mui.Chip(label=employee["status"], color="success" if employee["status"]=="Active" else "warning", sx={"bgcolor":status_map.get(employee["status"], "#9e9e9e"), "color":"white", "fontWeight":600, "mt":1})
 
-    # KPI nhanh (mini-dashboard)
     kpis = [
         {"label": "Tổng lương hiện tại", "value": f"{employee['salary'][-1]['base'] + employee['salary'][-1]['allowance']:,}đ", "color": "#388e3c"},
         {"label": "Phép còn lại", "value": f"{employee['attendance']['annual_leave_left']}", "color": "#1976d2"},
@@ -118,71 +117,48 @@ def page_employee_profile(employee=None):
             )
     st.divider()
 
-    # ---- Tabs ----
     tabs = st.tabs([
         "Tổng quan", "Hợp đồng & phụ lục", "Lịch sử công việc", "Vị trí & mô tả", "Lương & đãi ngộ", 
         "Chấm công & nghỉ phép", "Hiệu suất", "Khen thưởng/Kỷ luật", "Tài sản", "Lịch sử đề xuất", 
         "Hồ sơ tài liệu", "Tình trạng & kế hoạch"
     ])
 
-    # Tab 1: Tổng quan - mini dashboard, performance chart, assignment timeline (song song, transfer, promote)
+    # Tab 1: Tổng quan - Timeline công việc dùng plotly.timeline (group by phòng ban)
     with tabs[0]:
-        st.markdown("#### Mini dashboard cá nhân")
-        # KPI chart
-        with elements("overview-chart"):
-            with mui.Paper(sx={"p":2, "mb":2, "maxWidth":600}):
-                mui.Typography("Lịch sử điểm hiệu suất KPI", variant="subtitle1")
-                nivo.Line(
-                    data=[
-                        {
-                            "id": "KPI",
-                            "data": [
-                                {"x": p["period"], "y": p["kpi"]} for p in employee["performance"]
-                            ]
-                        }
-                    ],
-                    margin={"top": 20, "right": 20, "bottom": 40, "left": 50},
-                    xScale={"type": "point"},
-                    yScale={"type": "linear", "min": 0, "max": 100},
-                    axisLeft={"legend": "KPI", "legendOffset": -30},
-                    axisBottom={"legend": "Năm", "legendOffset": 32},
-                    pointSize=10,
-                    pointBorderWidth=2,
-                )
-        st.write("#### Timeline lịch sử Assignment (song song – promote – transfer)")
-        # Timeline bằng streamlit-vis-timeline, group theo phòng ban
-        timeline_data = []
-        group_map = {}
-        groups = []
-        group_counter = 1
-        for his in employee["assignment_history"]:
-            # Mỗi department sẽ là một group, tự động phân nhóm
-            dept = his["department"]
-            if dept not in group_map:
-                group_map[dept] = group_counter
-                groups.append({"id": group_counter, "content": dept})
-                group_counter += 1
-            timeline_data.append({
-                "id": len(timeline_data)+1,
-                "content": f"{his['job_title']}",
-                "start": his["from"],
-                "end": his["to"] or datetime.datetime.now().strftime("%Y-%m-%d"),
-                "group": group_map[dept],
-                "type": "range",
-                "title": f"Trạng thái: {his['status']}"
-            })
-        st_timeline(
-            items=timeline_data,
-            groups=groups,
-            options={
-                "stack": False,
-                "showCurrentTime": True,
-                "orientation": "top",
-                "width": "100%",
-                "height": "220px",
-            },
-            height="220px"
+        st.markdown("#### Timeline lịch sử Assignment (song song – promote – transfer)")
+        # Convert to dataframe for Plotly
+        now = datetime.datetime.now().strftime("%Y-%m-%d")
+        df_assign = pd.DataFrame([
+            {
+                "Phòng ban": his["department"],
+                "Vị trí": his["job_title"],
+                "Bắt đầu": his["from"],
+                "Kết thúc": his["to"] or now,
+                "Trạng thái": his["status"],
+            }
+            for his in employee["assignment_history"]
+        ])
+        # Plotly timeline (multi-row, color by department)
+        fig = px.timeline(
+            df_assign,
+            x_start="Bắt đầu",
+            x_end="Kết thúc",
+            y="Phòng ban",  # Group theo phòng ban (department)
+            color="Vị trí",
+            hover_data=["Vị trí", "Trạng thái", "Bắt đầu", "Kết thúc"],
+            title="Timeline lịch sử công việc (song song, promote, chuyển phòng)"
         )
+        fig.update_yaxes(autorange="reversed")
+        fig.update_layout(
+            height=330,
+            margin=dict(l=40, r=40, t=60, b=30),
+            xaxis_title="Thời gian",
+            yaxis_title="Phòng ban",
+            legend_title="Vị trí"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    # Các tab khác giữ nguyên (như code cũ) ...
 
     # Tab 2: Hợp đồng & phụ lục
     with tabs[1]:
