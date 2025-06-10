@@ -173,16 +173,34 @@ def page_employee_profile(employee=None):
 
     # Tab 3: Lịch sử công việc (promote, chuyển phòng)
     with tabs[2]:
-        st.markdown("#### Lịch sử điều chuyển/vị trí (Chi tiết theo thời gian)")
-        st.table([
+        st.markdown("#### Timeline lịch sử vị trí làm việc")
+        now = datetime.datetime.now().strftime("%Y-%m-%d")
+        df_assign = pd.DataFrame([
             {
-                "Từ": his["from"],
-                "Đến": his["to"] or "Hiện tại",
-                "Vị trí": his["job_title"],
                 "Phòng ban": his["department"],
+                "Vị trí": his["job_title"],
+                "Bắt đầu": his["from"],
+                "Kết thúc": his["to"] or now,
                 "Trạng thái": his["status"],
-            } for his in employee["assignment_history"]
+            }
+            for his in employee["assignment_history"]
         ])
+        fig2 = px.timeline(
+            df_assign,
+            x_start="Bắt đầu",
+            x_end="Kết thúc",
+            y="Vị trí",     # hoặc "Phòng ban" tuỳ mục đích
+            color="Trạng thái",
+            hover_data=["Phòng ban", "Bắt đầu", "Kết thúc"],
+            title="Timeline lịch sử vị trí"
+        )
+        fig2.update_yaxes(autorange="reversed")
+        fig2.update_layout(
+            height=300,
+            margin=dict(l=40, r=40, t=50, b=30),
+        )
+        st.plotly_chart(fig2, use_container_width=True)
+
 
     # Tab 4–12 (giữ nguyên, như ở code trước...)
 
