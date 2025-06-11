@@ -5,6 +5,100 @@ def page_person_profile(person=None, work_relationships=None):
     import streamlit_folium
     import folium
     from streamlit_echarts import st_echarts
+    import plotly.graph_objects as go
+
+    def tab_job_matching():
+        st.markdown("## 🗺️ Bản đồ Cơ hội Nghề nghiệp (Job Matching Map)")
+        st.info(
+            "Biểu đồ này giúp bạn hình dung các **cơ hội phát triển nghề nghiệp** nội bộ theo năng lực, bằng cấp, chứng chỉ, kỹ năng của mình. "
+            "Mỗi luồng thể hiện khả năng kết nối từ năng lực hiện tại đến vị trí công việc trong tổ chức."
+        )
+
+        # 1. Labels theo đúng từng node trong option
+        labels = [
+            "Nguyễn Văn A",               # 0 - Worker
+            "Đại học CNTT",               # 1 - Degree
+            "Năng lực Lập trình",         # 2 - Comp
+            "Năng lực Phân tích dữ liệu", # 3 - Comp
+            "Chứng chỉ PMP",              # 4 - Cert
+            "Python",                     # 5 - Skill
+            "SQL",                        # 6 - Skill
+            "Quản lý dự án",              # 7 - Skill
+            "Business Analysis",          # 8 - Skill
+            "Senior Developer",           # 9 - Job
+            "Data Analyst",               # 10 - Job
+            "Project Manager",            # 11 - Job
+            "Business Analyst"            # 12 - Job
+        ]
+
+        # 2. Luồng (source, target, value) tương ứng với ECharts
+        links = [
+            # Worker -> Degree/Comp/Cert
+            (0, 1, 1),
+            (0, 2, 1),
+            (0, 4, 1),
+            (0, 3, 1),
+            # Degree/Comp/Cert -> Skills
+            (1, 5, 1),
+            (2, 5, 1),
+            (4, 7, 1),
+            (3, 6, 1),
+            (3, 8, 1),
+            # Skills -> Jobs
+            (5, 9, 1),
+            (6, 10, 1),
+            (8, 12, 1),
+            (7, 11, 1),
+            (8, 11, 1),   # cross skill
+        ]
+
+        # 3. Màu node (theo depth)
+        node_colors = [
+            "#ffe599",     # 0 - Worker
+            "#a4c2f4",     # 1 - Degree
+            "#a4c2f4",     # 2 - Comp
+            "#a4c2f4",     # 3 - Comp
+            "#a4c2f4",     # 4 - Cert
+            "#b6d7a8",     # 5 - Skill
+            "#b6d7a8",     # 6 - Skill
+            "#b6d7a8",     # 7 - Skill
+            "#b6d7a8",     # 8 - Skill
+            "#e06666",     # 9 - Job
+            "#e06666",     # 10 - Job
+            "#e06666",     # 11 - Job
+            "#e06666",     # 12 - Job
+        ]
+
+        # 4. Tạo Sankey Diagram
+        fig = go.Figure(go.Sankey(
+            node = dict(
+                pad = 18,
+                thickness = 26,
+                line = dict(color = "#888", width = 0.5),
+                label = labels,
+                color = node_colors,
+                hovertemplate='%{label}<extra></extra>',
+            ),
+            link = dict(
+                source = [src for src, tgt, val in links],
+                target = [tgt for src, tgt, val in links],
+                value  = [val for src, tgt, val in links],
+                color = "rgba(160,160,160,0.32)",
+                hovertemplate='Từ %{source.label} → %{target.label}<br>Sức mạnh: %{value}<extra></extra>',
+            )
+        ))
+
+        fig.update_layout(
+            title="Bản đồ Cơ hội Nghề nghiệp (Job Matching Map)",
+            title_x=0.5,
+            font=dict(size=13, color="#333"),
+            margin=dict(l=10, r=10, t=40, b=10),
+            height=540,
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption("💡 Mỗi luồng minh hoạ năng lực/bằng cấp/chứng chỉ của bạn liên kết đến kỹ năng then chốt và các vị trí công việc nội bộ phù hợp.")
+
+    # Để nhúng: với tab hoặc riêng page, gọi tab_job_matching()
 
     # 1. Dummy data (nếu chưa truyền vào)
     if person is None:
@@ -79,7 +173,7 @@ def page_person_profile(person=None, work_relationships=None):
 
     # TABS UI
     tabs = st.tabs([
-        "Thông tin cá nhân", "Liên hệ", "Mở rộng","Quan hệ lao động", "Khen thưởng/Kỷ luật", "Tài liệu scan", "Bản đồ Cơ hội nghề nghiệp"
+        "Thông tin cá nhân", "Liên hệ", "Mở rộng","Quan hệ lao động", "Khen thưởng/Kỷ luật", "Tài liệu scan", "Bản đồ Cơ hội nghề nghiệp", "Bản đồ cơ hội nghề nghiệp - Plotly"
     ])
     with tabs[0]:
         st.write("**Ngày sinh:**", datetime.datetime.strptime(person["dob"], "%Y-%m-%d").strftime("%d/%m/%Y"))
@@ -325,6 +419,8 @@ def page_person_profile(person=None, work_relationships=None):
         st.caption("""
         👉 Mỗi đường dẫn thể hiện năng lực hoặc chứng chỉ hiện tại của bạn, những kỹ năng tương ứng và các vị trí công việc mà bạn đã sẵn sàng hoặc có tiềm năng chuyển đổi trong tổ chức.
         """)
+    with tabs[7]:
+        tab_job_matching()
 
 # ----- BỔ SUNG: THÊM TÊN TAB MỚI vào dòng tạo tabs:
 # tabs = st.tabs([
