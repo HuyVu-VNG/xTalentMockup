@@ -9,6 +9,7 @@ from page_person_profile import page_person_profile   # import hàm đã tạo
 from page_work_relationship import page_work_relationship 
 from page_employee_profile import page_employee_profile
 from page_employee_360_manager_view import page_employee_360_manager_view
+from page_hr_dashboard import page_hr_dashboard
 
 
 
@@ -154,9 +155,11 @@ with st.sidebar:
     st.title("xTalent")
     menu_id = sac.menu(items=menu_items, size='md',indent=10, color='indigo', open_all=False)
 
-st.title("xTalent HR Dashboard")
 
-if menu_id == 'Tổng quan nhân sự':
+if menu_id in [None, 'Trang chủ (Dashboard)']:
+    page_hr_dashboard()
+
+elif menu_id == 'Tổng quan nhân sự':
     st.subheader("📊 Tổng quan Nhân sự")
     page_hr_overview()
 elif menu_id == 'Biến động nhân sự':
