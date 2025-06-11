@@ -4,6 +4,7 @@ def page_person_profile(person=None, work_relationships=None):
     import datetime
     import streamlit_folium
     import folium
+    from streamlit_echarts import st_echarts
 
     # 1. Dummy data (nếu chưa truyền vào)
     if person is None:
@@ -78,7 +79,7 @@ def page_person_profile(person=None, work_relationships=None):
 
     # TABS UI
     tabs = st.tabs([
-        "Thông tin cá nhân", "Liên hệ", "Mở rộng","Quan hệ lao động", "Khen thưởng/Kỷ luật", "Tài liệu scan"
+        "Thông tin cá nhân", "Liên hệ", "Mở rộng","Quan hệ lao động", "Khen thưởng/Kỷ luật", "Tài liệu scan", "Bản đồ Cơ hội nghề nghiệp"
     ])
     with tabs[0]:
         st.write("**Ngày sinh:**", datetime.datetime.strptime(person["dob"], "%Y-%m-%d").strftime("%d/%m/%Y"))
@@ -147,3 +148,185 @@ def page_person_profile(person=None, work_relationships=None):
 
     st.divider()
     st.caption("UX xTalent: 1 Person – N Work Relationships (Legal Entity) – N Assignments (Job/Dept/Code). Phù hợp chuẩn HR quốc tế.")
+
+        # Tab 6: Job Matching Map (Career Opportunity Map)
+    with tabs[6]:
+        st.markdown("### 🗺️ Cơ hội nghề nghiệp nội bộ (Job Matching Map)")
+        st.info("""
+        Biểu đồ dưới đây giúp bạn hình dung các **cơ hội phát triển nghề nghiệp** phù hợp trong tổ chức, dựa trên hồ sơ năng lực, bằng cấp, chứng chỉ của bạn. Mỗi luồng là một khả năng nối giữa năng lực/bằng cấp/chứng chỉ của bạn đến kỹ năng then chốt và các vị trí công việc có thể tiếp cận nội bộ.
+        """)
+
+        # # Dummy data: degree, competency, certification của Nguyễn Văn A
+        # degree = "Đại học CNTT"
+        # competencies = ["Python", "SQL", "Quản lý dự án", "Phân tích nghiệp vụ"]
+        # certifications = ["PMI Agile Certified", "AWS Practitioner"]
+
+        # # Skills bạn đang có
+        # skills = ["Lập trình", "Quản trị hệ thống", "Phân tích dữ liệu", "Quản lý dự án"]
+
+        # # Mapping sang các Job nội bộ
+        # jobs = [
+        #     "Senior Developer",
+        #     "System Analyst",
+        #     "Project Coordinator",
+        #     "Data Analyst",
+        #     "Scrum Master"
+        # ]
+
+        # # Các mối liên kết dummy: Degree/Competency/Certification → Skill → Job
+        # nodes = [
+        #     {"name": person["name"], "itemStyle": {"color": "#94c3e5"}},  # Worker node
+
+        #     # Lớp Degree/Competency/Certification
+        #     {"name": degree, "itemStyle": {"color": "#ffe599"}},
+        #     *[{"name": c, "itemStyle": {"color": "#ffe599"}} for c in competencies],
+        #     *[{"name": c, "itemStyle": {"color": "#ffe599"}} for c in certifications],
+
+        #     # Lớp Skill
+        #     *[{"name": s, "itemStyle": {"color": "#b6d7a8"}} for s in skills],
+
+        #     # Lớp Job
+        #     *[{"name": j, "itemStyle": {"color": "#b4a7d6"}} for j in jobs]
+        # ]
+
+        # links = []
+        # # Worker → Degree/Competency/Certification
+        # links.append({"source": person["name"], "target": degree, "value": 2})
+        # for c in competencies:
+        #     links.append({"source": person["name"], "target": c, "value": 2})
+        # for c in certifications:
+        #     links.append({"source": person["name"], "target": c, "value": 2})
+
+        # # Degree/Competency/Certification → Skill
+        # links += [
+        #     {"source": degree, "target": "Lập trình", "value": 2},
+        #     {"source": "Quản lý dự án", "target": "Quản lý dự án", "value": 2},
+        #     {"source": "PMI Agile Certified", "target": "Quản lý dự án", "value": 2},
+        #     {"source": "Phân tích nghiệp vụ", "target": "Phân tích dữ liệu", "value": 2},
+        #     {"source": "SQL", "target": "Phân tích dữ liệu", "value": 1.5},
+        #     {"source": "AWS Practitioner", "target": "Quản trị hệ thống", "value": 1.5},
+        #     {"source": "Python", "target": "Lập trình", "value": 2}
+        # ]
+
+        # # Skill → Job
+        # links += [
+        #     {"source": "Lập trình", "target": "Senior Developer", "value": 2},
+        #     {"source": "Quản trị hệ thống", "target": "System Analyst", "value": 1.2},
+        #     {"source": "Quản lý dự án", "target": "Project Coordinator", "value": 2},
+        #     {"source": "Phân tích dữ liệu", "target": "Data Analyst", "value": 1.5},
+        #     {"source": "Quản lý dự án", "target": "Scrum Master", "value": 1.2},
+        #     {"source": "Lập trình", "target": "Scrum Master", "value": 1},
+        # ]
+
+        # option = {
+        #     "title": {"text": "Bản đồ cơ hội nghề nghiệp nội bộ", "left": "center"},
+        #     "tooltip": {"trigger": "item", "triggerOn": "mousemove"},
+        #     "series": [
+        #         {
+        #             "type": "sankey",
+        #             "data": nodes,
+        #             "links": links,
+        #             "emphasis": {"focus": "adjacency"},
+        #             "levels": [
+        #                 {"depth": 0, "itemStyle": {"color": "#94c3e5"}},
+        #                 {"depth": 1, "itemStyle": {"color": "#ffe599"}},
+        #                 {"depth": 2, "itemStyle": {"color": "#b6d7a8"}},
+        #                 {"depth": 3, "itemStyle": {"color": "#b4a7d6"}},
+        #             ],
+        #             "lineStyle": {"curveness": 0.5, "color": "gradient"},
+        #             "nodeGap": 24
+        #         }
+        #     ]
+        # }
+
+        # st_echarts(option, height="480px")
+
+        # option = {
+        #     "series": [
+        #         {
+        #             "type": "sankey",
+        #             "data": [
+        #                 {"name": "A"}, {"name": "B"}, {"name": "C"}
+        #             ],
+        #             "links": [
+        #                 {"source": "A", "target": "B", "value": 10},
+        #                 {"source": "B", "target": "C", "value": 15}
+        #             ]
+        #         }
+        #     ]
+        # }
+        option = {
+            "title": {"text": "Bản đồ Cơ hội Nghề nghiệp (Job Matching Map)", "left": "center"},
+            "tooltip": {"trigger": "item", "triggerOn": "mousemove"},
+            "series": [
+                {
+                    "type": "sankey",
+                    "data": [
+                        # Workers
+                        {"name": "Nguyễn Văn A"},
+                        # Degree/Comp/Cert
+                        {"name": "Đại học CNTT"},
+                        
+                        {"name": "Năng lực Lập trình"},
+                        {"name": "Năng lực Phân tích dữ liệu"},
+                        {"name": "Chứng chỉ PMP"},
+                        # Skills
+                        {"name": "Python"},
+                        {"name": "SQL"},
+                        {"name": "Quản lý dự án"},
+                        {"name": "Business Analysis"},
+                        # Jobs
+                        {"name": "Senior Developer"},
+                        {"name": "Data Analyst"},
+                        {"name": "Project Manager"},
+                        {"name": "Business Analyst"},
+                    ],
+                    "links": [
+                        # Nguyễn Văn A -> bằng cấp/năng lực/chứng chỉ
+                        {"source": "Nguyễn Văn A", "target": "Đại học CNTT", "value": 1},
+                        {"source": "Nguyễn Văn A", "target": "Năng lực Lập trình", "value": 1},
+                        {"source": "Nguyễn Văn A", "target": "Chứng chỉ PMP", "value": 1},
+                        {"source": "Nguyễn Văn A", "target": "Năng lực Phân tích dữ liệu", "value": 1},
+                        # Degree/Comp/Cert -> Skills
+                        {"source": "Đại học CNTT", "target": "Python", "value": 1},
+                        {"source": "Năng lực Lập trình", "target": "Python", "value": 1},
+                        {"source": "Chứng chỉ PMP", "target": "Quản lý dự án", "value": 1},
+                        {"source": "Năng lực Phân tích dữ liệu", "target": "SQL", "value": 1},
+                        {"source": "Năng lực Phân tích dữ liệu", "target": "Business Analysis", "value": 1},
+                        
+                        # Skills -> Jobs
+                        {"source": "Python", "target": "Senior Developer", "value": 1},
+                        {"source": "SQL", "target": "Data Analyst", "value": 1},
+                        {"source": "Business Analysis", "target": "Business Analyst", "value": 1},
+                        {"source": "Quản lý dự án", "target": "Project Manager", "value": 1},
+                        {"source": "Business Analysis", "target": "Project Manager", "value": 1},  # cross skill
+                    ],
+                    "emphasis": {"focus": "adjacency"},
+                    "lineStyle": {"color": "gradient", "curveness": 0.5},
+                    "levels": [
+                        {"depth": 0, "itemStyle": {"color": "#ffe599"}},       # Worker
+                        {"depth": 1, "itemStyle": {"color": "#a4c2f4"}},       # Degree/Comp/Cert
+                        {"depth": 2, "itemStyle": {"color": "#b6d7a8"}},       # Skill
+                        {"depth": 3, "itemStyle": {"color": "#e06666"}},       # Job
+                    ],
+                    "label": {
+                        "fontSize": 13,
+                        "color": "#333",
+                        "fontWeight": "bold"
+                    },
+                    "nodeGap": 18,
+                    "nodeAlign": "justify",  # nodes giãn đều các cột
+                }
+            ]
+        }
+
+        st_echarts(option, height="400px")
+
+        st.caption("""
+        👉 Mỗi đường dẫn thể hiện năng lực hoặc chứng chỉ hiện tại của bạn, những kỹ năng tương ứng và các vị trí công việc mà bạn đã sẵn sàng hoặc có tiềm năng chuyển đổi trong tổ chức.
+        """)
+
+# ----- BỔ SUNG: THÊM TÊN TAB MỚI vào dòng tạo tabs:
+# tabs = st.tabs([
+#     "Thông tin cá nhân", "Liên hệ", "Mở rộng", "Quan hệ lao động", "Khen thưởng/Kỷ luật", "Tài liệu scan", **"Bản đồ Cơ hội nghề nghiệp"**
+# ])
