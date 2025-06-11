@@ -8,5 +8,5 @@ numpy>=1.23.0
 streamlit_antd_components
 plotly>=5.18.0
 matplotlib
-streamlit-vis-timeline
 setuptools
+streamlit_echarts
