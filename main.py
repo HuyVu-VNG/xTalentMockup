@@ -10,7 +10,8 @@ from page_work_relationship import page_work_relationship
 from page_employee_profile import page_employee_profile
 from page_employee_360_manager_view import page_employee_360_manager_view
 from page_hr_dashboard import page_hr_dashboard
-
+from page_hr_workforce_overview import page_hr_workforce_overview
+from page_hr_churn_new import page_hr_churn_new
 
 
 
@@ -22,7 +23,9 @@ st.set_page_config(page_title="xTalent Dashboard", layout="wide")
 menu_items = [
     sac.MenuItem('Trang chủ (Dashboard)', icon='dashboard', children=[
         sac.MenuItem('Tổng quan nhân sự', icon='pie-chart'),
+        sac.MenuItem('Tổng quan nhân sự other', icon='pie-chart'),
         sac.MenuItem('Biến động nhân sự', icon='bar-chart'),
+        sac.MenuItem('Biến động nhân sự other', icon='bar-chart'),
         sac.MenuItem('Cảnh báo & nhắc nhở', icon='alert'),
         sac.MenuItem('Lịch sử hoạt động', icon='history'),
     ]),
@@ -162,9 +165,13 @@ if menu_id in [None, 'Trang chủ (Dashboard)']:
 elif menu_id == 'Tổng quan nhân sự':
     st.subheader("📊 Tổng quan Nhân sự")
     page_hr_overview()
+elif menu_id == 'Tổng quan nhân sự other':
+    page_hr_workforce_overview()
 elif menu_id == 'Biến động nhân sự':
     st.subheader("📊 Biến Động Nhân sự")
     page_hr_churn()
+elif menu_id == 'Biến động nhân sự other':
+    page_hr_churn_new()
 elif menu_id == 'Hồ sơ cá nhân':
     page_person_profile()
 elif menu_id == 'Hồ sơ nhân viên':
