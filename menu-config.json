@@ -1,0 +1,122 @@
+{
+  "brand": {
+    "name": "A4B HCM",
+    "version": "1.0.0",
+    "logo": null
+  },
+  "menu": [
+    {
+      "id": "home",
+      "label": "Home",
+      "icon": "home",
+      "path": "pages/home.html",
+      "badge": null
+    },
+    {
+      "id": "task",
+      "label": "Task",
+      "icon": "clipboard-list",
+      "path": "pages/task.html",
+      "badge": "12"
+    },
+    {
+      "id": "people",
+      "label": "People",
+      "icon": "users",
+      "path": null,
+      "children": [
+        {
+          "id": "candidates",
+          "label": "Candidates",
+          "path": "pages/candidates.html"
+        },
+        {
+          "id": "workers",
+          "label": "Workers",
+          "path": "pages/workers.html"
+        },
+        {
+          "id": "employees",
+          "label": "Employees",
+          "path": "pages/employees.html"
+        },
+        {
+          "id": "onboarding",
+          "label": "Onboarding",
+          "path": "pages/onboarding.html"
+        }
+      ]
+    },
+    {
+      "id": "org",
+      "label": "Org",
+      "icon": "sitemap",
+      "path": null,
+      "children": [
+        {
+          "id": "departments",
+          "label": "Departments",
+          "path": "pages/departments.html"
+        },
+        {
+          "id": "positions",
+          "label": "Positions",
+          "path": "pages/positions.html"
+        },
+        {
+          "id": "org-chart",
+          "label": "Org Chart",
+          "path": "pages/org-chart.html"
+        }
+      ]
+    },
+    {
+      "id": "datas",
+      "label": "Datas",
+      "icon": "database",
+      "path": null,
+      "children": [
+        {
+          "id": "master-data",
+          "label": "Master Data",
+          "path": "pages/master-data.html"
+        },
+        {
+          "id": "reports",
+          "label": "Reports",
+          "path": "pages/reports.html"
+        }
+      ]
+    },
+    {
+      "id": "setting",
+      "label": "Setting",
+      "icon": "sliders",
+      "path": "pages/setting.html"
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "icon": "shield",
+      "path": "pages/security.html"
+    }
+  ],
+  "bottomMenu": [
+    {
+      "id": "hrm",
+      "label": "HRM",
+      "icon": "user-circle",
+      "path": null,
+      "isProfile": true
+    }
+  ],
+  "header": {
+    "showSearch": true,
+    "showNotifications": true,
+    "showLanguage": true,
+    "languages": [
+      { "code": "en", "name": "English", "flag": "🇺🇸" },
+      { "code": "vi", "name": "Tiếng Việt", "flag": "🇻🇳" }
+    ]
+  }
+}

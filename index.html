@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCM Portal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Google Fonts - Plus Jakarta Sans (Premium feel) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#fef3f2',
+                            100: '#fee4e2',
+                            200: '#fecdca',
+                            300: '#fca5a1',
+                            400: '#f87168',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                        },
+                        sidebar: {
+                            bg: '#1e293b',
+                            hover: '#334155',
+                            active: '#0f172a',
+                            text: '#94a3b8',
+                            textActive: '#ffffff',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+                        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Sidebar scrollbar */
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        
+        /* Smooth transitions */
+        .menu-item {
+            transition: all 0.2s ease;
+        }
+        
+        /* Submenu animation */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .submenu.open {
+            max-height: 500px;
+        }
+        
+        /* Content iframe */
+        #content-frame {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Notification badge pulse */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .badge-pulse::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: inherit;
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+        
+        /* Dropdown animation */
+        .dropdown-menu {
+            transform-origin: top right;
+            transition: all 0.2s ease;
+        }
+        .dropdown-menu.hidden {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+            pointer-events: none;
+        }
+        .dropdown-menu.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-50 font-sans antialiased">
+    <div id="app" class="flex h-full">
+        
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-[70px] hover:w-[260px] bg-sidebar-bg flex flex-col transition-all duration-300 ease-in-out group/sidebar fixed h-full z-40">
+            
+            <!-- Logo / Brand -->
+            <div class="h-16 flex items-center px-4 border-b border-slate-700/50">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <span class="text-white font-bold text-lg">A</span>
+                    </div>
+                    <div class="opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <h1 class="text-white font-semibold text-lg tracking-tight">HCM Portal</h1>
+                        <p class="text-slate-400 text-xs">Enterprise Edition</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav id="main-nav" class="flex-1 py-4 overflow-y-auto sidebar-scroll">
+                <!-- Menu will be rendered here by JS -->
+            </nav>
+            
+            <!-- Bottom Menu (Profile) -->
+            <div id="bottom-nav" class="border-t border-slate-700/50 py-3">
+                <!-- Bottom menu will be rendered here -->
+            </div>
+            
+            <!-- Footer -->
+            <div class="px-4 py-3 border-t border-slate-700/50">
+                <p class="text-slate-500 text-xs opacity-0 group-hover/sidebar:opacity-100 transition-opacity whitespace-nowrap">
+                    <span class="text-primary-400">A4B</span>HCM © 2025 - v1.0.0
+                </p>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col ml-[70px] transition-all duration-300">
+            
+            <!-- Header -->
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm">
+                
+                <!-- Left: Page Title & Breadcrumb -->
+                <div class="flex items-center gap-4">
+                    <div id="breadcrumb" class="flex items-center gap-2 text-sm">
+                        <span class="text-slate-400">Home</span>
+                    </div>
+                </div>
+                
+                <!-- Right: Actions -->
+                <div class="flex items-center gap-2">
+                    
+                    <!-- Search -->
+                    <button id="search-btn" class="p-2.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors" title="Search">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <button id="lang-btn" class="p-2.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-1" title="Language">
+                            <span class="text-lg">🇺🇸</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                        <div id="lang-dropdown" class="dropdown-menu hidden absolute right-0 top-full mt-2 bg-white rounded-xl shadow-lg border border-slate-200 py-2 min-w-[160px]">
+                            <button class="w-full px-4 py-2 text-left hover:bg-slate-50 flex items-center gap-3 text-sm" data-lang="en">
+                                <span class="text-lg">🇺🇸</span>
+                                <span>English</span>
+                            </button>
+                            <button class="w-full px-4 py-2 text-left hover:bg-slate-50 flex items-center gap-3 text-sm" data-lang="vi">
+                                <span class="text-lg">🇻🇳</span>
+                                <span>Tiếng Việt</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <button id="notification-btn" class="p-2.5 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors relative" title="Notifications">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-primary-500 rounded-full badge-pulse"></span>
+                    </button>
+                    
+                    <!-- Customize Page Button -->
+                    <button id="customize-btn" class="ml-2 px-4 py-2 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-50 hover:border-slate-400 transition-all text-sm font-medium flex items-center gap-2">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                        <span>Customize Page</span>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content Area -->
+            <main id="content-area" class="flex-1 relative">
+                <!-- Loading Overlay -->
+                <div id="loading-overlay" class="loading-overlay absolute inset-0 flex items-center justify-center z-20 hidden">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-10 h-10 border-3 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                        <span class="text-slate-500 text-sm">Loading...</span>
+                    </div>
+                </div>
+                
+                <!-- Content Frame -->
+                <iframe id="content-frame" name="content-frame" src="pages/home.html"></iframe>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Search Modal -->
+    <div id="search-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeSearchModal()"></div>
+        <div class="absolute top-[20%] left-1/2 -translate-x-1/2 w-full max-w-2xl px-4">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        class="flex-1 text-lg outline-none placeholder:text-slate-400" 
+                        placeholder="Search employees, documents, settings..."
+                        autofocus
+                    >
+                    <kbd class="px-2 py-1 bg-slate-100 rounded text-xs text-slate-500 font-mono">ESC</kbd>
+                </div>
+                <div class="max-h-[400px] overflow-y-auto p-2">
+                    <div class="text-center py-8 text-slate-400">
+                        <i data-lucide="file-search" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>
+                        <p>Start typing to search...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // HCM Portal - Main Application Script
+        // ========================================
+        
+        let menuConfig = null;
+        let currentMenuItem = 'home';
+        let expandedMenus = new Set();
+        
+        // Icon mapping for Lucide icons
+        const iconMap = {
+            'home': 'home',
+            'clipboard-list': 'clipboard-list',
+            'users': 'users',
+            'sitemap': 'git-branch',
+            'database': 'database',
+            'sliders': 'sliders-horizontal',
+            'shield': 'shield',
+            'user-circle': 'circle-user'
+        };
+        
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadMenuConfig();
+            renderMenu();
+            setupEventListeners();
+            lucide.createIcons();
+        });
+        
+        // Load menu configuration
+        async function loadMenuConfig() {
+            try {
+                const response = await fetch('menu-config.json');
+                menuConfig = await response.json();
+            } catch (error) {
+                console.error('Failed to load menu config:', error);
+                // Fallback config
+                menuConfig = { menu: [], bottomMenu: [] };
+            }
+        }
+        
+        // Render main navigation menu
+        function renderMenu() {
+            const nav = document.getElementById('main-nav');
+            const bottomNav = document.getElementById('bottom-nav');
+            
+            nav.innerHTML = menuConfig.menu.map(item => renderMenuItem(item)).join('');
+            bottomNav.innerHTML = menuConfig.bottomMenu.map(item => renderMenuItem(item, true)).join('');
+            
+            // Re-initialize icons
+            lucide.createIcons();
+        }
+        
+        // Render individual menu item
+        function renderMenuItem(item, isBottom = false) {
+            const hasChildren = item.children && item.children.length > 0;
+            const isActive = currentMenuItem === item.id;
+            const isExpanded = expandedMenus.has(item.id);
+            const iconName = iconMap[item.icon] || item.icon;
+            
+            let html = `
+                <div class="menu-group px-3 mb-1" data-menu-id="${item.id}">
+                    <button 
+                        class="menu-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left
+                            ${isActive ? 'bg-primary-500/10 text-primary-400' : 'text-sidebar-text hover:bg-sidebar-hover hover:text-white'}
+                            ${hasChildren ? 'justify-between' : ''}"
+                        onclick="${hasChildren ? `toggleSubmenu('${item.id}')` : `navigateTo('${item.id}', '${item.path}')`}"
+                    >
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <i data-lucide="${iconName}" class="w-5 h-5 flex-shrink-0"></i>
+                            <span class="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">${item.label}</span>
+                        </div>
+                        ${item.badge ? `
+                            <span class="px-2 py-0.5 bg-primary-500 text-white text-xs rounded-full font-medium opacity-0 group-hover/sidebar:opacity-100 transition-opacity">
+                                ${item.badge}
+                            </span>
+                        ` : ''}
+                        ${hasChildren ? `
+                            <i data-lucide="chevron-right" class="w-4 h-4 flex-shrink-0 transition-transform opacity-0 group-hover/sidebar:opacity-100 ${isExpanded ? 'rotate-90' : ''}"></i>
+                        ` : ''}
+                    </button>
+            `;
+            
+            if (hasChildren) {
+                html += `
+                    <div class="submenu ${isExpanded ? 'open' : ''} ml-6 mt-1 space-y-1 opacity-0 group-hover/sidebar:opacity-100 transition-opacity">
+                        ${item.children.map(child => `
+                            <button 
+                                class="menu-item w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-sm
+                                    ${currentMenuItem === child.id ? 'bg-primary-500/10 text-primary-400' : 'text-sidebar-text hover:bg-sidebar-hover hover:text-white'}"
+                                onclick="navigateTo('${child.id}', '${child.path}')"
+                            >
+                                <span class="w-1.5 h-1.5 rounded-full ${currentMenuItem === child.id ? 'bg-primary-400' : 'bg-slate-500'}"></span>
+                                <span>${child.label}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+        
+        // Toggle submenu
+        function toggleSubmenu(menuId) {
+            if (expandedMenus.has(menuId)) {
+                expandedMenus.delete(menuId);
+            } else {
+                expandedMenus.add(menuId);
+            }
+            renderMenu();
+        }
+        
+        // Navigate to page
+        function navigateTo(menuId, path) {
+            if (!path) return;
+            
+            currentMenuItem = menuId;
+            
+            // Show loading
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            
+            // Load content
+            const frame = document.getElementById('content-frame');
+            frame.src = path;
+            
+            // Update breadcrumb
+            updateBreadcrumb(menuId);
+            
+            // Re-render menu to update active state
+            renderMenu();
+        }
+        
+        // Update breadcrumb
+        function updateBreadcrumb(menuId) {
+            const breadcrumb = document.getElementById('breadcrumb');
+            let path = [];
+            
+            // Find menu item and its parent
+            for (const item of menuConfig.menu) {
+                if (item.id === menuId) {
+                    path = [item.label];
+                    break;
+                }
+                if (item.children) {
+                    const child = item.children.find(c => c.id === menuId);
+                    if (child) {
+                        path = [item.label, child.label];
+                        break;
+                    }
+                }
+            }
+            
+            if (path.length === 0) path = ['Home'];
+            
+            breadcrumb.innerHTML = path.map((p, i) => `
+                <span class="${i === path.length - 1 ? 'text-slate-700 font-medium' : 'text-slate-400'}">${p}</span>
+                ${i < path.length - 1 ? '<i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i>' : ''}
+            `).join('');
+            
+            lucide.createIcons();
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Content frame loaded
+            document.getElementById('content-frame').addEventListener('load', () => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            });
+            
+            // Search button
+            document.getElementById('search-btn').addEventListener('click', openSearchModal);
+            
+            // Language dropdown
+            document.getElementById('lang-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const dropdown = document.getElementById('lang-dropdown');
+                dropdown.classList.toggle('hidden');
+                dropdown.classList.toggle('show');
+            });
+            
+            // Close dropdowns on outside click
+            document.addEventListener('click', () => {
+                document.getElementById('lang-dropdown').classList.add('hidden');
+                document.getElementById('lang-dropdown').classList.remove('show');
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + K for search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    openSearchModal();
+                }
+                // ESC to close modals
+                if (e.key === 'Escape') {
+                    closeSearchModal();
+                }
+            });
+        }
+        
+        // Search modal functions
+        function openSearchModal() {
+            document.getElementById('search-modal').classList.remove('hidden');
+            document.getElementById('search-input').focus();
+            lucide.createIcons();
+        }
+        
+        function closeSearchModal() {
+            document.getElementById('search-modal').classList.add('hidden');
+        }
+        
+        // Expose functions globally for onclick handlers
+        window.toggleSubmenu = toggleSubmenu;
+        window.navigateTo = navigateTo;
+        window.closeSearchModal = closeSearchModal;
+    </script>
+</body>
+</html>

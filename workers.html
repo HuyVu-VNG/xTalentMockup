@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workers - HCM Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#fef3f2',
+                            100: '#fee4e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .table-row:hover { background-color: #f8fafc; }
+        .checkbox-custom:checked { background-color: #ef4444; border-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans">
+    <div class="h-full min-h-screen">
+        
+        <!-- Page Header -->
+        <div class="bg-white border-b border-slate-200 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-semibold text-slate-800">Workers</h1>
+                    <span class="px-3 py-1 bg-primary-50 text-primary-600 text-sm font-medium rounded-full">35,041</span>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <button class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors flex items-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Export</span>
+                    </button>
+                    <button class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl transition-colors flex items-center gap-2 shadow-sm">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add Worker</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filters & Search -->
+        <div class="px-6 py-4 bg-white border-b border-slate-200">
+            <div class="flex items-center gap-4">
+                <div class="relative flex-1 max-w-md">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input 
+                        type="text" 
+                        placeholder="Search by name, code, email..." 
+                        class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                    >
+                </div>
+                
+                <button class="p-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors" title="Refresh">
+                    <i data-lucide="refresh-cw" class="w-5 h-5 text-slate-500"></i>
+                </button>
+                
+                <button class="p-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors" title="Filter">
+                    <i data-lucide="sliders-horizontal" class="w-5 h-5 text-slate-500"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Table -->
+        <div class="px-6 py-4">
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="w-12 px-4 py-3">
+                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500">
+                            </th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Name</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Code</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Date of Birth</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Personal Email</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Phone Number</th>
+                            <th class="w-16 px-4 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="workers-table">
+                        <!-- Data will be rendered here -->
+                    </tbody>
+                </table>
+                
+                <!-- Pagination -->
+                <div class="px-4 py-3 border-t border-slate-200 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm text-slate-500">Page Size:</span>
+                        <select class="px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20">
+                            <option>50</option>
+                            <option>100</option>
+                            <option>200</option>
+                        </select>
+                        <span class="text-sm text-slate-500">1 to 50 of 35,041</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-1">
+                        <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 disabled:opacity-50" disabled>
+                            <i data-lucide="chevrons-left" class="w-4 h-4"></i>
+                        </button>
+                        <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 disabled:opacity-50" disabled>
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <span class="px-3 py-1.5 text-sm text-slate-600">Page 1 of 701</span>
+                        <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                        <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-600">
+                            <i data-lucide="chevrons-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Column Selector (Floating) -->
+        <button class="fixed right-0 top-1/2 -translate-y-1/2 bg-white border border-slate-200 border-r-0 rounded-l-xl px-2 py-4 shadow-lg hover:bg-slate-50 transition-colors group">
+            <div class="flex flex-col items-center gap-1">
+                <i data-lucide="columns-3" class="w-5 h-5 text-slate-500 group-hover:text-slate-700"></i>
+                <span class="text-xs text-slate-500 writing-mode-vertical group-hover:text-slate-700" style="writing-mode: vertical-rl;">Columns</span>
+            </div>
+        </button>
+    </div>
+    
+    <script>
+        // Sample workers data
+        const workers = [
+            { name: "Tú Nguyễn Lê", code: "HW-2393623", dob: "01/01/1986", email: "1254local@my.local", phone: "+84123456789" },
+            { name: "Tuyền Phan Thị Thạch", code: "HW-2393612", dob: "01/01/1985", email: "2488local@my.local", phone: "+84123456789" },
+            { name: "Thanh Ninh Thị", code: "HW-2393601", dob: "01/01/1986", email: "919local@my.local", phone: "+84123456789" },
+            { name: "Quân Nguyễn Thành", code: "HW-2393591", dob: "01/01/1980", email: "3218local@my.local", phone: "+84123456789" },
+            { name: "Cảnh Lê Đại", code: "HW-2393581", dob: "01/01/1990", email: "4169local@my.local", phone: "+84123456789" },
+            { name: "Ba Nguyễn Lê Vĩ", code: "HW-2393571", dob: "01/01/1981", email: "2069local@my.local", phone: "+84123456789" },
+            { name: "Hùng Nguyễn Việt", code: "HW-2393561", dob: "01/01/1984", email: "2836local@my.local", phone: "+84123456789" },
+            { name: "Năng Đỗ Văn", code: "HW-2393548", dob: "01/01/1990", email: "4806local@my.local", phone: "+84123456789" },
+            { name: "Phú Trần Triệu", code: "HW-2393538", dob: "01/01/1989", email: "1121local@my.local", phone: "+84123456789" },
+            { name: "Phương Lưu Thế", code: "HW-2393528", dob: "01/01/1989", email: "1103local@my.local", phone: "+84123456789" },
+            { name: "Hoàng Thị Huệ", code: "HW-2393517", dob: "01/01/1983", email: "1541local@my.local", phone: "+84123456789" },
+            { name: "Tùng Ngô Thanh", code: "HW-2393506", dob: "01/01/1963", email: "4797local@my.local", phone: "+84123456789" },
+            { name: "Lập Bùi Quốc", code: "HW-2393496", dob: "01/01/1984", email: "5741local@my.local", phone: "+84123456789" },
+            { name: "Trình Công Tằng Tôn Nữ Kiều", code: "HW-2393486", dob: "01/01/1987", email: "1695local@my.local", phone: "+84123456789" },
+            { name: "Huy Nguyễn Trong", code: "HW-2393476", dob: "01/01/1985", email: "3664local@my.local", phone: "+84123456789" },
+        ];
+        
+        // Render table
+        function renderTable() {
+            const tbody = document.getElementById('workers-table');
+            tbody.innerHTML = workers.map(worker => `
+                <tr class="table-row border-b border-slate-100 cursor-pointer" onclick="viewWorkerDetail('${worker.code}')">
+                    <td class="px-4 py-3" onclick="event.stopPropagation()">
+                        <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500">
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="font-medium text-slate-800">${worker.name}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="text-slate-600 font-mono text-sm">${worker.code}</span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">${worker.dob}</td>
+                    <td class="px-4 py-3 text-slate-600">${worker.email}</td>
+                    <td class="px-4 py-3 text-slate-600">${worker.phone}</td>
+                    <td class="px-4 py-3" onclick="event.stopPropagation()">
+                        <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
+                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+        
+        // View worker detail
+        function viewWorkerDetail(code) {
+            window.location.href = `worker-detail.html?code=${code}`;
+        }
+        
+        // Initialize
+        renderTable();
+        lucide.createIcons();
+    </script>
+</body>
+</html>

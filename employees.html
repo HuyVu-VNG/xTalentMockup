@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees - HCM Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#fef3f2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 font-sans">
+    <div class="min-h-screen">
+        
+        <!-- Page Header -->
+        <div class="bg-white border-b border-slate-200 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-semibold text-slate-800">Employees</h1>
+                    <span class="px-3 py-1 bg-green-50 text-green-600 text-sm font-medium rounded-full">28,450</span>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <button class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors flex items-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Export</span>
+                    </button>
+                    <button class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl transition-colors flex items-center gap-2 shadow-sm">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add Employee</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="px-6 py-4">
+            <div class="grid grid-cols-4 gap-4">
+                <div class="bg-white rounded-2xl p-5 border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-slate-500 text-sm">Total Employees</span>
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                            <i data-lucide="users" class="w-5 h-5 text-blue-500"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800">28,450</div>
+                    <div class="text-sm text-green-500 mt-1 flex items-center gap-1">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        <span>+2.5% this month</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-5 border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-slate-500 text-sm">Active</span>
+                        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                            <i data-lucide="user-check" class="w-5 h-5 text-green-500"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800">27,892</div>
+                    <div class="text-sm text-slate-400 mt-1">98.1% of total</div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-5 border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-slate-500 text-sm">On Leave</span>
+                        <div class="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center">
+                            <i data-lucide="calendar-off" class="w-5 h-5 text-yellow-500"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800">458</div>
+                    <div class="text-sm text-slate-400 mt-1">1.6% of total</div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-5 border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-slate-500 text-sm">New This Month</span>
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                            <i data-lucide="user-plus" class="w-5 h-5 text-purple-500"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800">156</div>
+                    <div class="text-sm text-green-500 mt-1 flex items-center gap-1">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        <span>+18% vs last month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="px-6 py-4 bg-white border-y border-slate-200">
+            <div class="flex items-center gap-4">
+                <div class="relative flex-1 max-w-md">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input 
+                        type="text" 
+                        placeholder="Search employees..." 
+                        class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                    >
+                </div>
+                
+                <select class="px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20">
+                    <option>All Departments</option>
+                    <option>Engineering</option>
+                    <option>Marketing</option>
+                    <option>Sales</option>
+                    <option>HR</option>
+                </select>
+                
+                <select class="px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20">
+                    <option>All Status</option>
+                    <option>Active</option>
+                    <option>On Leave</option>
+                    <option>Inactive</option>
+                </select>
+                
+                <button class="p-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">
+                    <i data-lucide="sliders-horizontal" class="w-5 h-5 text-slate-500"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Table -->
+        <div class="px-6 py-4">
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="w-12 px-4 py-3">
+                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300">
+                            </th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Employee</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Department</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Position</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Join Date</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-slate-600">Status</th>
+                            <th class="w-16 px-4 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer">
+                            <td class="px-4 py-3">
+                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300">
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white font-medium">NL</div>
+                                    <div>
+                                        <p class="font-medium text-slate-800">Nguyễn Lê Tú</p>
+                                        <p class="text-sm text-slate-500">tu.nguyen@company.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-slate-600">Engineering</td>
+                            <td class="px-4 py-3 text-slate-600">Senior Developer</td>
+                            <td class="px-4 py-3 text-slate-600">15/03/2020</td>
+                            <td class="px-4 py-3">
+                                <span class="px-3 py-1 bg-green-50 text-green-600 text-sm rounded-full">Active</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400">
+                                    <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer">
+                            <td class="px-4 py-3">
+                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300">
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center text-white font-medium">TH</div>
+                                    <div>
+                                        <p class="font-medium text-slate-800">Trần Hoàng Mai</p>
+                                        <p class="text-sm text-slate-500">mai.tran@company.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-slate-600">Marketing</td>
+                            <td class="px-4 py-3 text-slate-600">Marketing Manager</td>
+                            <td class="px-4 py-3 text-slate-600">08/01/2019</td>
+                            <td class="px-4 py-3">
+                                <span class="px-3 py-1 bg-green-50 text-green-600 text-sm rounded-full">Active</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400">
+                                    <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 cursor-pointer">
+                            <td class="px-4 py-3">
+                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300">
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-500 flex items-center justify-center text-white font-medium">PV</div>
+                                    <div>
+                                        <p class="font-medium text-slate-800">Phạm Văn Đức</p>
+                                        <p class="text-sm text-slate-500">duc.pham@company.com</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-slate-600">Sales</td>
+                            <td class="px-4 py-3 text-slate-600">Sales Lead</td>
+                            <td class="px-4 py-3 text-slate-600">22/06/2021</td>
+                            <td class="px-4 py-3">
+                                <span class="px-3 py-1 bg-yellow-50 text-yellow-600 text-sm rounded-full">On Leave</span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-400">
+                                    <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Pagination -->
+                <div class="px-4 py-3 border-t border-slate-200 flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Showing 1 to 50 of 28,450</span>
+                    <div class="flex items-center gap-1">
+                        <button class="px-3 py-1.5 rounded-lg hover:bg-slate-100 text-slate-400" disabled>Previous</button>
+                        <button class="px-3 py-1.5 rounded-lg bg-primary-500 text-white">1</button>
+                        <button class="px-3 py-1.5 rounded-lg hover:bg-slate-100 text-slate-600">2</button>
+                        <button class="px-3 py-1.5 rounded-lg hover:bg-slate-100 text-slate-600">3</button>
+                        <span class="px-2 text-slate-400">...</span>
+                        <button class="px-3 py-1.5 rounded-lg hover:bg-slate-100 text-slate-600">569</button>
+                        <button class="px-3 py-1.5 rounded-lg hover:bg-slate-100 text-slate-600">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

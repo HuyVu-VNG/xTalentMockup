@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Detail - HCM Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#fef3f2',
+                            100: '#fee4e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 font-sans">
+    <div class="min-h-screen">
+        
+        <!-- Breadcrumb -->
+        <div class="bg-white border-b border-slate-200 px-6 py-3">
+            <div class="flex items-center gap-2 text-sm">
+                <a href="workers.html" class="text-slate-400 hover:text-primary-500 transition-colors">Workers</a>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300"></i>
+                <span class="text-slate-700 font-medium">Detail Information</span>
+            </div>
+        </div>
+        
+        <!-- Profile Header -->
+        <div class="bg-white border-b border-slate-200 px-6 py-6">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center gap-6">
+                    <!-- Avatar -->
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                        <i data-lucide="user" class="w-10 h-10 text-slate-400"></i>
+                    </div>
+                    
+                    <!-- Basic Info -->
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-800 mb-1">Tú Nguyễn Lê</h1>
+                        <p class="text-slate-500 font-mono text-sm mb-3">Code: HW-2393623</p>
+                        
+                        <div class="flex items-center gap-6 text-sm text-slate-600">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="user" class="w-4 h-4 text-slate-400"></i>
+                                <span>Male</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+                                <span>+84 123 456 789</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
+                                <span>01/01/1986</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+                                <span>1254local@my.local</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
+                    <button class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-2">
+                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                        <span>Edit</span>
+                    </button>
+                    <button class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+                        <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="bg-white border-b border-slate-200 px-6">
+            <div class="flex items-center gap-1">
+                <button class="px-4 py-3 text-primary-500 font-medium border-b-2 border-primary-500 -mb-px">
+                    Overview
+                </button>
+                <button class="px-4 py-3 text-slate-500 hover:text-slate-700 font-medium transition-colors">
+                    Other Information
+                </button>
+                <button class="px-4 py-3 text-slate-500 hover:text-slate-700 font-medium transition-colors">
+                    Documents
+                </button>
+                <button class="px-4 py-3 text-slate-500 hover:text-slate-700 font-medium transition-colors">
+                    History
+                </button>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="p-6">
+            <div class="max-w-5xl">
+                
+                <!-- Personal Information -->
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-6">
+                    <div class="px-6 py-4 border-b border-slate-100">
+                        <h2 class="text-lg font-semibold text-slate-800">Personal Information</h2>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-3 gap-6">
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">First Name</label>
+                                <p class="text-slate-800 font-medium">Tú</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Last & Middle Name</label>
+                                <p class="text-slate-800 font-medium">Nguyễn Lê</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Code</label>
+                                <p class="text-slate-800 font-medium font-mono">HW-2393623</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Date of Birth</label>
+                                <p class="text-slate-800 font-medium">01/01/1986</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Gender</label>
+                                <p class="text-slate-800 font-medium">Male</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Nationality</label>
+                                <p class="text-slate-800 font-medium">Việt Nam</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Phone Number</label>
+                                <p class="text-slate-800 font-medium">+84 123 456 789</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Personal Email</label>
+                                <p class="text-slate-800 font-medium">1254local@my.local</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Marital Status</label>
+                                <p class="text-slate-800 font-medium">Single</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Facebook</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">LinkedIn</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Permanent Address -->
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-6">
+                    <div class="px-6 py-4 border-b border-slate-100">
+                        <h2 class="text-lg font-semibold text-slate-800">Permanent Address</h2>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-3 gap-6">
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Country</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">City</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">District</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Ward</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-sm text-slate-400 mb-1 block">Home Address, Street</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Residential Address -->
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100">
+                        <h2 class="text-lg font-semibold text-slate-800">Residential Address</h2>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-3 gap-6">
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Country</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">City</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">District</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-slate-400 mb-1 block">Ward</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-sm text-slate-400 mb-1 block">Home Address, Street</label>
+                                <p class="text-slate-400">—</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
