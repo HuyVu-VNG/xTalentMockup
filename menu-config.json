@@ -9,14 +9,14 @@
       "id": "home",
       "label": "Home",
       "icon": "home",
-      "path": "pages/home.html",
+      "path": "./home.html",
       "badge": null
     },
     {
       "id": "task",
       "label": "Task",
       "icon": "clipboard-list",
-      "path": "pages/task.html",
+      "path": "./task.html",
       "badge": "12"
     },
     {
@@ -28,22 +28,22 @@
         {
           "id": "candidates",
           "label": "Candidates",
-          "path": "pages/candidates.html"
+          "path": "./candidates.html"
         },
         {
           "id": "workers",
           "label": "Workers",
-          "path": "pages/workers.html"
+          "path": "./workers.html"
         },
         {
           "id": "employees",
           "label": "Employees",
-          "path": "pages/employees.html"
+          "path": "./employees.html"
         },
         {
           "id": "onboarding",
           "label": "Onboarding",
-          "path": "pages/onboarding.html"
+          "path": "./onboarding.html"
         }
       ]
     },
@@ -56,12 +56,12 @@
         {
           "id": "departments",
           "label": "Departments",
-          "path": "pages/departments.html"
+          "path": "./departments.html"
         },
         {
           "id": "positions",
           "label": "Positions",
-          "path": "pages/positions.html"
+          "path": "./positions.html"
         },
         {
           "id": "org-chart",
@@ -79,12 +79,12 @@
         {
           "id": "master-data",
           "label": "Master Data",
-          "path": "pages/master-data.html"
+          "path": "./master-data.html"
         },
         {
           "id": "reports",
           "label": "Reports",
-          "path": "pages/reports.html"
+          "path": "./reports.html"
         }
       ]
     },
@@ -92,13 +92,13 @@
       "id": "setting",
       "label": "Setting",
       "icon": "sliders",
-      "path": "pages/setting.html"
+      "path": "./setting.html"
     },
     {
       "id": "security",
       "label": "Security",
       "icon": "shield",
-      "path": "pages/security.html"
+      "path": "./security.html"
     }
   ],
   "bottomMenu": [
@@ -115,8 +115,16 @@
     "showNotifications": true,
     "showLanguage": true,
     "languages": [
-      { "code": "en", "name": "English", "flag": "🇺🇸" },
-      { "code": "vi", "name": "Tiếng Việt", "flag": "🇻🇳" }
+      {
+        "code": "en",
+        "name": "English",
+        "flag": "🇺🇸"
+      },
+      {
+        "code": "vi",
+        "name": "Tiếng Việt",
+        "flag": "🇻🇳"
+      }
     ]
   }
 }
